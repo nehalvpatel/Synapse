@@ -3,36 +3,43 @@
 namespace Synapse;
 
 /**
- * Class Handler
+ * Handler Class Doc Comment
+ *
+ * @category Core
+ * @package  Synapse
+ * @author   Nehal Patel <nehal@itspatel.com>
+ * @license  http://opensource.org/licenses/MIT MIT license
+ * @link     https://packagist.org/packages/nehalvpatel/synapse
  */
 class Handler implements \SessionHandlerInterface
 {
     /**
      * @var \PDO PDO object
      */
-    private $connection = null;
+    private $_connection = null;
 
     /**
      * Constructs handler
+     *
+     * @param \PDO $connection The connection the database
      */
     public function __construct(\PDO $connection)
     {
-        $this->connection = $connection;
-        unset($connection);
+        $this->_connection = $connection;
     }
 
     /**
      * Opens session
      *
-     * @param string $save_path
-     * @param string $session_name
+     * @param string $save_path    Path to save session data
+     * @param string $session_name Custom session name
      *
      * @return boolean
      */
     public function open($save_path = "", $session_name = "")
     {
         // make sessions table if it doesn't exist
-        $table_query = $this->connection->prepare("CREATE TABLE IF NOT EXISTS `sessions` (`ID` varchar(63) CHARACTER SET ascii NOT NULL DEFAULT '', `Data` text, `Expire` int(10) unsigned DEFAULT NULL, PRIMARY KEY (`ID`), KEY `Expire` (`Expire`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+        $table_query = $this->_connection->prepare("CREATE TABLE IF NOT EXISTS `sessions` (`ID` varchar(63) CHARACTER SET ascii NOT NULL DEFAULT '', `Data` text, `Expire` int(10) unsigned DEFAULT NULL, PRIMARY KEY (`ID`), KEY `Expire` (`Expire`)) ENGINE=InnoDB DEFAULT CHARSET=utf8");
 
         return $table_query->execute();
     }
@@ -44,8 +51,6 @@ class Handler implements \SessionHandlerInterface
      */
     public function close()
     {
-        $this->connection = null;
-
         return true;
     }
 
@@ -58,7 +63,7 @@ class Handler implements \SessionHandlerInterface
      */
     public function read($id)
     {
-        $read_query = $this->connection->prepare("SELECT `Data` FROM `sessions` WHERE `ID` = :ID");
+        $read_query = $this->_connection->prepare("SELECT `Data` FROM `sessions` WHERE `ID` = :ID");
         $read_query->bindValue(":ID", $id);
         $read_query->execute();
 
@@ -70,14 +75,14 @@ class Handler implements \SessionHandlerInterface
     /**
      * Write session data
      *
-     * @param string $id Session id
+     * @param string $id   Session id
      * @param string $data Session data to be written
      *
      * @return boolean
      */
     public function write($id, $data)
     {
-        $write_query = $this->connection->prepare("INSERT INTO `sessions` (`ID`, `Data`, `Expire`) VALUES (:ID, :Data, :Expire) ON DUPLICATE KEY UPDATE `Data` = :Data, `Expire` = :Expire");
+        $write_query = $this->_connection->prepare("INSERT INTO `sessions` (`ID`, `Data`, `Expire`) VALUES (:ID, :Data, :Expire) ON DUPLICATE KEY UPDATE `Data` = :Data, `Expire` = :Expire");
         $write_query->bindValue(":ID", $id);
         $write_query->bindValue(":Data", $data);
         $write_query->bindValue(":Expire", time() + ini_get("session.gc_maxlifetime"));
@@ -94,7 +99,7 @@ class Handler implements \SessionHandlerInterface
      */
     public function destroy($id)
     {
-        $destroy_query = $this->connection->prepare("DELETE FROM `sessions` WHERE `ID` = :ID");
+        $destroy_query = $this->_connection->prepare("DELETE FROM `sessions` WHERE `ID` = :ID");
         $destroy_query->bindValue(":ID", $id);
 
         return $destroy_query->execute();
@@ -110,9 +115,9 @@ class Handler implements \SessionHandlerInterface
      */
     public function gc($maxlifetime)
     {
-        $cleanup_query = $this->connection->prepare("DELETE FROM `sessions` WHERE `Expire` < :Old");
+        $cleanup_query = $this->_connection->prepare("DELETE FROM `sessions` WHERE `Expire` < :Old");
         $cleanup_query->bindValue(":Old", time() - $maxlifetime);
-
+        
         return $cleanup_query->execute();
     }
 }
