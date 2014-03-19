@@ -21,7 +21,7 @@ class HandlerTest extends \PHPUnit_Framework_TestCase
      * Mock pdo object
      * @var PDO
      */
-    static private $_pdo = null;
+    private $_pdo = null;
     
     /** Sets up test environment
     *
