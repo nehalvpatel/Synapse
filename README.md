@@ -12,7 +12,7 @@ Synapse saves sessions to the database.
 3. Run composer
 
 ### Example
-1. Pass a PDO object to the handler class
+1. Pass a PDO object to the handler class (a table called "sessions" will be auto generated)
 2. Set the save handler to use the class
 3. Start the session
 
