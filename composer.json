@@ -1,0 +1,26 @@
+{
+	"name": "nehalvpatel/synapse",
+	"description": "Synapse saves sessions to the database",
+	"keywords": ["sessions", "database", "oop"],
+	"homepage": "https://github.com/nehalvpatel/Synapse",
+	"type": "library",
+	"license": "MIT",
+	"authors": [{
+		"name": "Nehal Patel",
+		"email": "nehal@itspatel.com",
+		"homepage": "http://www.itspatel.com",
+		"role": "Developer"
+	}],
+	
+	"minimum-stability": "stable",
+	
+	"require": {
+		"php": ">=5.4.0"
+	},
+	
+	"autoload": {
+		"psr-0": {
+			"Synapse\\": "src/"
+		}
+	}
+}
