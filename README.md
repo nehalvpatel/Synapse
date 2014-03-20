@@ -1,8 +1,6 @@
-Synapse
+Synapse ![Build Status](https://api.travis-ci.org/nehalvpatel/Synapse.png)
 =======
 Synapse saves sessions to the database.
-
-![Build Status](https://api.travis-ci.org/nehalvpatel/Synapse.png)
 
 ### Requirements
 - PHP 5.4 and up
